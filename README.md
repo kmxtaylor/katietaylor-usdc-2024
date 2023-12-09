@@ -26,7 +26,7 @@ You will submit both the HTML and JavaScript files when you are done. You should
 
 Directions for submission are in the prompt. As a reminder, you should commit your code to a repository called
 
-*firstnamelastname*-usdc-2023
+*firstnamelastname*-usdc-2024
 
 If you were remarkable technologists of years past, you might name your repository
 
