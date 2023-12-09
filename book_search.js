@@ -19,31 +19,19 @@
  * @returns {JSON} - Search results.
  * */ 
  function findSearchTermInBooks(searchTerm, scannedTextObj) {
-    /** You will need to implement your search and 
-     * return the appropriate object here. */
-
-    // init empty results list
     let results = [];
     
     let trimmedSearchTerm = searchTerm.trim(' ');
-
-    if (trimmedSearchTerm) { // adds to indentation, may extract to flatten later
-        // for each book in scannedTextObj
-        scannedTextObj.forEach(book => { // forEach ok b/c we don't need to break early. can't use filter here tho
-            // if book has content
+    if (trimmedSearchTerm) {
+        scannedTextObj.forEach(book => {
             if (book.Content) {
-                // for each content obj (could use filter here but not necessary & would req concatenation to results)
-                // book.Content.forEach(contentObj => { // unable to access next content obj for hyphenation check
                 for (let idx = 0; idx < book.Content.length; idx++) {
-                    // if text ends w/ - & there's another content obj after this, // checks for hyphenated term
+                    // check for match over hyphenated line break
                     if (book.Content[idx].Text.endsWith('-') && book.Content[idx+1]) {
-                        // check for match w/ last word of line (w/o -) + first word of next line
                         let lineEndWordFragment = book.Content[idx].Text.split(' ').pop()
                         lineEndWordFragment = lineEndWordFragment.slice(0, -1); // w/o '-'
                         let lineStartWordFragment = book.Content[idx+1].Text.split(' ').shift();
-                        // if match found from combined piece
                         if ((lineEndWordFragment + lineStartWordFragment) === searchTerm) {
-                            // append obj to results list (isbn, page, line)
                             results.push({
                                 "ISBN": book.ISBN,
                                 "Page": book.Content[idx].Page,
@@ -51,10 +39,7 @@
                             });
                         }
                     }
-
-                    // else if search term is in text for this obj (probably regex). don't need index, just boolean
                     else if (book.Content[idx].Text.includes(trimmedSearchTerm)) {
-                        // append obj to results list (isbn, page, line)
                         results.push({
                             "ISBN": book.ISBN,
                             "Page": book.Content[idx].Page,
