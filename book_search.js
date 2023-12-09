@@ -33,25 +33,35 @@
             // if book has content
             if (book.Content) {
                 // for each content obj (could use filter here but not necessary & would req concatenation to results)
-                book.Content.forEach(contentObj => {
-                    // if search term is in text for this obj (probably regex). don't need index, just boolean
-                    if (contentObj.Text.includes(trimmedSearchTerm)) {
+                // book.Content.forEach(contentObj => { // unable to access next content obj for hyphenation check
+                for (let idx = 0; idx < book.Content.length; idx++) {
+                    // if text ends w/ - & there's another content obj after this, // checks for hyphenated term
+                    if (book.Content[idx].Text.endsWith('-') && book.Content[idx+1]) {
+                        // check for match w/ last word of line (w/o -) + first word of next line
+                        let lineEndWordFragment = book.Content[idx].Text.split(' ').pop()
+                        lineEndWordFragment = lineEndWordFragment.slice(0, -1); // w/o '-'
+                        let lineStartWordFragment = book.Content[idx+1].Text.split(' ').shift();
+                        // if match found from combined piece
+                        if ((lineEndWordFragment + lineStartWordFragment) === searchTerm) {
+                            // append obj to results list (isbn, page, line)
+                            results.push({
+                                "ISBN": book.ISBN,
+                                "Page": book.Content[idx].Page,
+                                "Line": book.Content[idx].Line,
+                            });
+                        }
+                    }
+
+                    // else if search term is in text for this obj (probably regex). don't need index, just boolean
+                    else if (book.Content[idx].Text.includes(trimmedSearchTerm)) {
                         // append obj to results list (isbn, page, line)
                         results.push({
                             "ISBN": book.ISBN,
-                            "Page": contentObj.Page,
-                            "Line": contentObj.Line,
+                            "Page": book.Content[idx].Page,
+                            "Line": book.Content[idx].Line,
                         });
                     }
-                    // if text ends w/ -,
-                    // else if (contentObj.Text.endsWith('-')) {
-                    //     // check for match w/ last word of line (w/o -) + first word of next line
-                    //     let lastWordPiece = contentObj.Text.split(" ").pop().slice(0, -1); // w/o '-'
-                    //     let nextWordPiece;
-                    //     // if match found from combined pieces
-                    //     // append obj to results list (isbn, page, line)
-                    // }
-                });
+                };
             }
         });
     }
