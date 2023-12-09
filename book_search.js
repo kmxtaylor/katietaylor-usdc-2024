@@ -23,19 +23,42 @@
      * return the appropriate object here. */
 
     // init empty results list
-    // for each book in scannedTextObj
-        // if book has content
-            // search for search term in text for this obj (probably regex)
-            // if match found
-                // append obj to results list (isbn, page, line)
-            // if text ends w/ -,
-                // check for match w/ last word of line (w/o -) + first word of next line
-                // if match found
-                    // append obj to results list (isbn, page, line)
-   
+    let results = [];
+    
+    let trimmedSearchTerm = searchTerm.trim(' ');
+
+    if (trimmedSearchTerm) { // adds to indentation, may extract to flatten later
+        // for each book in scannedTextObj
+        scannedTextObj.forEach(book => { // forEach ok b/c we don't need to break early. can't use filter here tho
+            // if book has content
+            if (book.Content) {
+                // for each content obj (could use filter here but not necessary & would req concatenation to results)
+                book.Content.forEach(contentObj => {
+                    // if search term is in text for this obj (probably regex). don't need index, just boolean
+                    if (contentObj.Text.includes(trimmedSearchTerm)) {
+                        // append obj to results list (isbn, page, line)
+                        results.push({
+                            "ISBN": book.ISBN,
+                            "Page": contentObj.Page,
+                            "Line": contentObj.Line,
+                        });
+                    }
+                    // if text ends w/ -,
+                    // else if (contentObj.Text.endsWith('-')) {
+                    //     // check for match w/ last word of line (w/o -) + first word of next line
+                    //     let lastWordPiece = contentObj.Text.split(" ").pop().slice(0, -1); // w/o '-'
+                    //     let nextWordPiece;
+                    //     // if match found from combined pieces
+                    //     // append obj to results list (isbn, page, line)
+                    // }
+                });
+            }
+        });
+    }
+
     return {
-        "SearchTerm": "",
-        "Results": []
+        "SearchTerm": searchTerm,
+        "Results": results
     }; 
 }
 
@@ -226,7 +249,7 @@ if (test2result.Results.length == 1) {
 }
 
 /** Test that search can find multiple results given a single-book input */
-const test3result = findSearchTermInBooks("and", multipleBooksIn); 
+const test3result = findSearchTermInBooks("and", twentyLeaguesIn); 
 if (JSON.stringify(twentyLeaguesMultipleResultsOut) === JSON.stringify(test3result)) {
     console.log("PASS: Test 3");
 } else {
