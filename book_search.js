@@ -22,12 +22,21 @@
     /** You will need to implement your search and 
      * return the appropriate object here. */
 
-    var result = {
+    // init empty results list
+    // for each book in scannedTextObj
+        // if book has content
+            // search for search term in text for this obj (probably regex)
+            // if match found
+                // append obj to results list (isbn, page, line)
+            // if text ends w/ -,
+                // check for match w/ last word of line (w/o -) + first word of next line
+                // if match found
+                    // append obj to results list (isbn, page, line)
+   
+    return {
         "SearchTerm": "",
         "Results": []
-    };
-    
-    return result; 
+    }; 
 }
 
 /**
