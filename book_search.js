@@ -278,12 +278,9 @@ if (JSON.stringify(multipleBooksMultipleResultsOut) === JSON.stringify(test4resu
     console.log("Received:", test4result);
 }
 
-/**
- * EDGE CASE TESTS
- */
-/** Test that the search can handle a list with no books (and not find any matches, of course) */
-const test5result = findSearchTermInBooks("the", emptyBookListIn);
-if (test5result.Results.length == 0) { // search term not important to check in this case
+/** Test that search returns empty list of results for a non-blank search term with no matches in an acceptable input */
+const test5result = findSearchTermInBooks("qwerty", twentyLeaguesIn);
+if (test5result.Results.length == 0) {
     console.log("PASS: Test 5");
 } else {
     console.log("FAIL: Test 5");
@@ -291,9 +288,12 @@ if (test5result.Results.length == 0) { // search term not important to check in 
     console.log("Received:", test5result.Results.length);
 }
 
-/** Test that the search can handle a book with no scanned content (and not find any matches, of course) */
-const test6result = findSearchTermInBooks("the", emptyContentIn);
-if (test6result.Results.length == 0) {
+/**
+ * EDGE CASE TESTS
+ */
+/** Test that the search can handle a list with no books (and not find any matches, of course) */
+const test6result = findSearchTermInBooks("the", emptyBookListIn);
+if (test6result.Results.length == 0) { // search term not important to check in this case
     console.log("PASS: Test 6");
 } else {
     console.log("FAIL: Test 6");
@@ -301,22 +301,32 @@ if (test6result.Results.length == 0) {
     console.log("Received:", test6result.Results.length);
 }
 
-/** Test that search can handle a search term that's whitespace or otherwise blank */
-const test7result = findSearchTermInBooks("  ", twentyLeaguesIn);
-if (JSON.stringify(blankSearchTermOut) === JSON.stringify(test7result)) {
+/** Test that the search can handle a book with no scanned content (and not find any matches, of course) */
+const test7result = findSearchTermInBooks("the", emptyContentIn);
+if (test7result.Results.length == 0) {
     console.log("PASS: Test 7");
 } else {
     console.log("FAIL: Test 7");
-    console.log("Expected:", blankSearchTermOut);
-    console.log("Received:", test7result);
+    console.log("Expected:", 0);
+    console.log("Received:", test7result.Results.length);
 }
 
-/** Test that search can handle a search term that includes a result from a hyphenated version of the term. This is an edge case, and if I don't get to implementing a solution for this case, I'll comment it out. */
-const test8result = findSearchTermInBooks("darkness", twentyLeaguesIn);
-if (JSON.stringify(hyphenatedSearchTermOut) === JSON.stringify(test8result)) {
+/** Test that search can handle a search term that's whitespace or otherwise blank */
+const test8result = findSearchTermInBooks("  ", twentyLeaguesIn);
+if (JSON.stringify(blankSearchTermOut) === JSON.stringify(test8result)) {
     console.log("PASS: Test 8");
 } else {
     console.log("FAIL: Test 8");
-    console.log("Expected:", hyphenatedSearchTermOut);
+    console.log("Expected:", blankSearchTermOut);
     console.log("Received:", test8result);
+}
+
+/** Test that search can handle a search term that includes a result from a hyphenated version of the term */
+const test9result = findSearchTermInBooks("darkness", twentyLeaguesIn);
+if (JSON.stringify(hyphenatedSearchTermOut) === JSON.stringify(test9result)) {
+    console.log("PASS: Test 9");
+} else {
+    console.log("FAIL: Test 9");
+    console.log("Expected:", hyphenatedSearchTermOut);
+    console.log("Received:", test9result);
 }
